@@ -4,75 +4,89 @@ ANIMALS = [
         "name": "Snickers",
         "species": "Dog",
         "locationId": 1,
-        "customerId": 4
+        "customerId": 4,
+        "status": "Admitted"
+
     },
     {
         "id": 2,
         "name": "Gypsy",
         "species": "Dog",
         "locationId": 1,
-        "customerId": 2
+        "customerId": 2,
+        "status": "Admitted"
     },
     {
         "id": 3,
         "name": "Blue",
         "species": "Cat",
         "locationId": 2,
-        "customerId": 1
+        "customerId": 1,
+        "status": "Admitted"
     },
     {
         "id": 4,
         "name": "Spot",
-        "breed": "Beagle",
+        "species": "Beagle",
         "customerId": 5,
-        "locationId": 2
+        "locationId": 2,
+        "status": "Admitted"
     },
     {
         "id": 5,
-        "name": "Dudley",
+        "species": "Dudley",
         "breed": "Bulldog",
         "customerId": 1,
-        "locationId": 2
+        "locationId": 2,
+        "status": "Admitted"
     },
     {
         "id": 6,
         "name": "Sadie",
-        "breed": "Cocker Spaniel",
+        "species": "Cocker Spaniel",
         "customerId": 2,
-        "locationId": 1
+        "locationId": 1,
+        "status": "Admitted"
     },
     {
         "name": "Sparky",
-        "breed": "Beagle",
+        "species": "Beagle",
         "locationId": 1,
         "customerId": 4,
-        "id": 7
+        "id": 7,
+        "status": "Admitted"
     },
     {
         "id": 8,
         "name": "Jimmy",
+        "species": "mutt",
         "locationId": 1,
-        "customerId": 1
+        "customerId": 1,
+        "status": "Admitted"
     },
     {
         "name": "Sparkle Kitten",
         "locationId": 1,
         "customerId": 3,
-        "id": 9
+        "id": 9,
+        "species": "cat",
+        "status": "Admitted"
     },
     {
         "id": 10,
         "name": "Doodles",
-        "breed": "Poodle",
+        "species": "Poodle",
         "customerId": 3,
-        "locationId": 2
+        "locationId": 2,
+        "status": "Admitted"
     },
     {
         "id": 11,
         "name": "Pickles",
-        "breed": "Chihuahua",
+        "species": "Chihuahua",
         "customerId": 4,
-        "locationId": 1
+        "locationId": 1,
+        "status": "Admitted"
     }
 ]
 
@@ -127,3 +141,12 @@ def delete_animal(id):
     # If the animal was found, use pop(int) to remove it from list
     if animal_index >= 0:
         ANIMALS.pop(animal_index)
+
+def update_animal(id, new_animal):
+    # Iterate the ANIMALS list, but use enumerate() so that
+    # you can access the index value of each item.
+    for index, animal in enumerate(ANIMALS):
+        if animal["id"] == id:
+            # Found the animal. Update the value.
+            ANIMALS[index] = new_animal
+            break
