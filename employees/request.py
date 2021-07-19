@@ -111,6 +111,27 @@ def get_single_employee(id):
 
         return json.dumps(employee.__dict__)
 
+def get_employees_by_location(location_id):
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+            SELECT
+                e.id,
+                e.name,
+                e.address,
+                e.location_id
+            FROM employee e
+            WHERE e.location_id = ?
+            """, (location_id, ))
+
+        data = db_cursor.fetchone()
+
+        employee = Employee(data['id'], data['name'], data['address'], data['location_id'])
+
+        return json.dumps(employee.__dict__)
+
 
 def create_employee(employee):
 
