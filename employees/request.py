@@ -81,14 +81,35 @@ def get_all_employees():
         return json.dumps(employees)
 
 
+# def get_single_employee(id):
+#     requested_employee = None
+
+#     for employee in EMPLOYEES:
+#         if employee["id"] == id:
+#             requested_employee = employee
+
+#     return requested_employee
+
 def get_single_employee(id):
-    requested_employee = None
+    with sqlite3.connect("./kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    for employee in EMPLOYEES:
-        if employee["id"] == id:
-            requested_employee = employee
+        db_cursor.execute("""
+            SELECT
+                e.id,
+                e.name,
+                e.address,
+                e.location_id
+            FROM employee e
+            WHERE e.id = ?
+            """, (id, ))
 
-    return requested_employee
+        data = db_cursor.fetchone()
+
+        employee = Employee(data['id'], data['name'], data['address'], data['location_id'])
+
+        return json.dumps(employee.__dict__)
 
 
 def create_employee(employee):

@@ -34,7 +34,7 @@ def get_all_locations():
             SELECT
                 l.id,
                 l.name,
-                l.address,
+                l.address
             FROM location l
             """)
 
@@ -50,14 +50,34 @@ def get_all_locations():
 
     return json.dumps(locations)
 
+# def get_single_location(id):
+#     requested_location = None
+
+#     for location in LOCATIONS:
+#         if location["id"] == id:
+#             requested_location = location
+
+#     return requested_location
+
 def get_single_location(id):
-    requested_location = None
+    with sqlite3.connect("/kennel.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
-    for location in LOCATIONS:
-        if location["id"] == id:
-            requested_location = location
+        db_cursor.execute("""
+            SELECT
+                l.id,
+                l.name,
+                l.address,
+            FROM location l
+            WHERE l.id = ?
+        """, (id, ))
 
-    return requested_location
+        data = db_cursor.fetchone()
+
+        location = Location(data['id'], data['name'], data['address'])
+
+        return json.dumps(location.__dict__)
 
 
 def create_location(location):
