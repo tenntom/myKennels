@@ -82,15 +82,6 @@ def get_all_employees():
         return json.dumps(employees)
 
 
-# def get_single_employee(id):
-#     requested_employee = None
-
-#     for employee in EMPLOYEES:
-#         if employee["id"] == id:
-#             requested_employee = employee
-
-#     return requested_employee
-
 def get_single_employee(id):
     with sqlite3.connect("./kennel.db") as conn:
         conn.row_factory = sqlite3.Row
@@ -111,6 +102,7 @@ def get_single_employee(id):
         employee = Employee(data['id'], data['name'], data['address'], data['location_id'])
 
         return json.dumps(employee.__dict__)
+
 
 def get_employees_by_location(location_id):
 
@@ -153,14 +145,13 @@ def create_employee(employee):
 
 
 def delete_employee(id):
-    employee_index = -1
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
 
-    for index, employee in enumerate(EMPLOYEES):
-        if employee["id"] == id:
-            employee_index = index
-
-    if employee_index >= 0:
-        EMPLOYEES.pop(employee_index)
+        db_cursor.execute("""
+        DELETE FROM employee
+        WHERE id = ?
+        """, (id, ))
 
 
 def update_employee(id, new_employee):

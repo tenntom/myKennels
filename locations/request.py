@@ -50,14 +50,6 @@ def get_all_locations():
 
     return json.dumps(locations)
 
-# def get_single_location(id):
-#     requested_location = None
-
-#     for location in LOCATIONS:
-#         if location["id"] == id:
-#             requested_location = location
-
-#     return requested_location
 
 def get_single_location(id):
     with sqlite3.connect("./kennel.db") as conn:
@@ -102,6 +94,16 @@ def delete_location(id):
 
     if location_index >= 0:
         LOCATIONS.pop(location_index)
+
+def delete_location(id):
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM location
+        WHERE id = ?
+        """, (id, ))
+
 
 def update_location(id, new_location):
     for index, location in enumerate(LOCATIONS):
