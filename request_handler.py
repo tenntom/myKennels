@@ -175,7 +175,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "employees":
             success = update_employee(id, post_body)
         if resource == "locations":
-            success =update_location(id, post_body)
+            success = update_location(id, post_body)
         
         if success:
             self._set_headers(204)
