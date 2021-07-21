@@ -3,53 +3,6 @@ import sqlite3
 import json
 from models import Employee, Location
 
-
-EMPLOYEES = [
-    {
-        "id": 1,
-        "name": "Bob Saget",
-        "position": "General Manager",
-        "locationId": 1,
-        "payRate": 15
-    },
-    {
-        "id": 2,
-        "name": "Punky Brewster",
-        "position": "Dog Groomer",
-        "locationId": 2,
-        "payRate": 15
-    },
-    {
-        "id": 3,
-        "name": "Willis Jackson ",
-        "position": "Sales Manager",
-        "locationId": 1,
-        "payRate": 15
-    },
-    {
-        "id": 4,
-        "name": "Blair",
-        "position": "Interior Designer",
-        "locationId": 2,
-        "payRate": 15
-    },
-    {
-        "name": "Mike Sevier",
-        "locationId": 2,
-        "position": "Janitor",
-        "id": 5,
-        "payRate": 15
-    },
-    {
-        "name": "Marcia Brady",
-        "locationId": 2,
-        "position": "Marketing Assistant",
-        "id": 6,
-        "payRate": 15
-    }
-]
-
-
 # def get_all_employees():
 #     return EMPLOYEES
 
@@ -139,17 +92,42 @@ def get_employees_by_location(location_id):
         return json.dumps(employees)
 
 
-def create_employee(employee):
+# def create_employee(employee):
 
-    max_id = EMPLOYEES[-1]["id"]
+#     max_id = EMPLOYEES[-1]["id"]
 
-    new_id = max_id + 1
+#     new_id = max_id + 1
 
-    employee["id"] = new_id
+#     employee["id"] = new_id
 
-    EMPLOYEES.append(employee)
+#     EMPLOYEES.append(employee)
 
-    return employee
+#     return employee
+
+def create_employee(new_employee):
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO employee
+            ( name, address, location_id)
+        VALUES
+            ( ?, ?, ?);
+        """, (new_employee['name'], new_employee['address'],
+              new_employee['location_id']))
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the animal dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_employee['id'] = id
+
+
+    return json.dumps(new_employee)
 
 
 def delete_employee(id):

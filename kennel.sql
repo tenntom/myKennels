@@ -55,7 +55,6 @@ SELECT
     e.address,
     e.location_id
 FROM employee e
-WHERE e.id = 3
 
 
 INSERT INTO `Customer` VALUES (null, "Mo Silvera", "201 Created St", "mo@silvera.com", "password");
@@ -102,3 +101,4 @@ SELECT
 FROM Animal a
 JOIN Location l
     ON l.id = a.location_id
+
