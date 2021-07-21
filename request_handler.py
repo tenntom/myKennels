@@ -122,7 +122,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             elif key == "status" and resource == "animals":
                 response = get_animals_by_status(value)
 
-        self.wfile.write(response.encode())
+        self.wfile.write(f"{response}".encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any POST request.
@@ -165,17 +165,23 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Update a single animal from the list
-        if resource == "animals":
-            update_animal(id, post_body)
-        if resource == "customers":
-            update_customer(id, post_body)
-        if resource == "employees":
-            update_employee(id, post_body)
-        if resource == "locations":
-            update_location(id, post_body)
+        success = False
 
-        # Encode the animal update and send in response
+        # Update a single item
+        if resource == "animals":
+            success = update_animal(id, post_body)
+        if resource == "customers":
+            success = update_customer(id, post_body)
+        if resource == "employees":
+            success = update_employee(id, post_body)
+        if resource == "locations":
+            success =update_location(id, post_body)
+        
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
         self.wfile.write("".encode())
 
     def do_DELETE(self):

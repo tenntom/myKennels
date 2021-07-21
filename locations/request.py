@@ -18,11 +18,6 @@ LOCATIONS = [
     }
 ]
 
-
-# def get_all_locations():
-#     """Gets Locations"""
-#     return LOCATIONS
-
 def get_all_locations():
     """Gets Locations"""
     with sqlite3.connect("./kennel.db") as conn:
@@ -57,12 +52,12 @@ def get_single_location(id):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-            SELECT
-                l.id,
-                l.name,
-                l.address,
-            FROM location l
-            WHERE l.id = ?
+        SELECT
+            l.id,
+            l.name,
+            l.address,
+        FROM location l
+        WHERE l.id = ?
         """, (id, ))
 
         data = db_cursor.fetchone()
@@ -85,15 +80,15 @@ def create_location(location):
     return location
 
 
-def delete_location(id):
-    location_index = -1
+# def delete_location(id):
+#     location_index = -1
 
-    for index, location in enumerate(LOCATIONS):
-        if location["id"] == id:
-            location_index = index
+#     for index, location in enumerate(LOCATIONS):
+#         if location["id"] == id:
+#             location_index = index
 
-    if location_index >= 0:
-        LOCATIONS.pop(location_index)
+#     if location_index >= 0:
+#         LOCATIONS.pop(location_index)
 
 def delete_location(id):
     with sqlite3.connect("./kennel.db") as conn:
@@ -104,9 +99,30 @@ def delete_location(id):
         WHERE id = ?
         """, (id, ))
 
-
 def update_location(id, new_location):
-    for index, location in enumerate(LOCATIONS):
-        if location["id"] == id:
-            LOCATIONS[index] = new_location
-            break
+    with sqlite3.connect("./kennel.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Location
+            SET
+                name = ?,
+                address = ?
+        WHERE id = ?
+        """, (new_location['name'], new_location['address'], id, ))
+
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
+
+
+# def update_location(id, new_location):
+#     for index, location in enumerate(LOCATIONS):
+#         if location["id"] == id:
+#             LOCATIONS[index] = new_location
+#             break
